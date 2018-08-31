@@ -1,10 +1,16 @@
-FROM hashicorp/terraform:light
+FROM hashicorp/terraform:full
 
-ENV TERRAFORM_HELM_PROVIDER_VERSION="v0.5.1"
+ENV HELM_PROVIDER_VERSION="0.5.1"
 
-RUN wget https://github.com/mcuadros/terraform-provider-helm/releases/download/${TERRAFORM_HELM_PROVIDER_VERSION}/terraform-provider-helm_${TERRAFORM_HELM_PROVIDER_VERSION}_linux_amd64.tar.gz \
-  && tar -xvf terraform-provider-helm*.tar.gz \
-  && mkdir -p /root/.terraform.d/plugins/linux_amd64/ \
-  && mv terraform-provider-helm*/terraform-provider-helm /root/.terraform.d/plugins/linux_amd64/terraform-provider-helm_${TERRAFORM_HELM_PROVIDER_VERSION} \
-  && chown root:root /root/.terraform.d/plugins/linux_amd64/terraform-provider-helm_${TERRAFORM_HELM_PROVIDER_VERSION} \
-  && rm -rf terraform-provider-helm*
+RUN apk add make gcc linux-headers musl-dev --no-cache
+
+RUN mkdir -p $GOPATH/src/github.com/mcuadros \
+  && git clone https://github.com/mcuadros/terraform-provider-helm.git $GOPATH/src/github.com/mcuadros/terraform-provider-helm \
+  && cd $GOPATH/src/github.com/mcuadros/terraform-provider-helm \
+  && git fetch --all --tags --prune \
+  && git checkout tags/v${HELM_PROVIDER_VERSION} \
+  && make build
+
+RUN mkdir -p ~/.terraform.d/plugins/ \
+  && mv $GOPATH/src/github.com/mcuadros/terraform-provider-helm/terraform-provider-helm ~/.terraform.d/plugins/ \
+  && rm -rf $GOPATH/src/github.com/mcuadros
