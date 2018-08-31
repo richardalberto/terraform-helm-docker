@@ -1,5 +1,5 @@
 # terraform-helm-docker
-Docker image with the terraform-helm provider pre-installed
+Docker image with the [terraform-helm](https://github.com/mcuadros/terraform-provider-helm) provider pre-installed
 
 ## Pull
 `
