@@ -8,7 +8,7 @@ ENV HELM_VERSION="v2.10.0"
 # https://mcuadros/terraform-provider-helm/releases
 ENV HELM_PROVIDER_VERSION="0.5.1"
 
-RUN apk add make gcc linux-headers musl-dev --no-cache
+RUN apk add make gcc linux-headers musl-dev --no-cache --virtual /tmp/.build-deps
 
 RUN mkdir -p $GOPATH/src/github.com/mcuadros \
   && git clone https://github.com/mcuadros/terraform-provider-helm.git $GOPATH/src/github.com/mcuadros/terraform-provider-helm \
@@ -22,3 +22,5 @@ RUN mkdir -p $GOPATH/src/github.com/mcuadros \
 
 RUN wget -q http://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz -O - | tar -xzO linux-amd64/helm > /usr/local/bin/helm \
     && chmod +x /usr/local/bin/helm
+
+RUN apk del /tmp/.build-deps
