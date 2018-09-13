@@ -6,7 +6,7 @@ ENV HELM_VERSION="v2.10.0"
 
 # Note: Latest version of the provider may be found at:
 # https://mcuadros/terraform-provider-helm/releases
-ENV HELM_PROVIDER_VERSION="0.5.1"
+ENV HELM_PROVIDER_VERSION="0.6.0"
 
 RUN apk add make gcc linux-headers musl-dev --no-cache --virtual /tmp/.build-deps
 
